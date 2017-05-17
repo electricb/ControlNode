@@ -33,12 +33,14 @@ class ControllerNode(object):
     def url_cycle(urlList):
         """Main cycle looping through list of URLs
 
-        This method takes the incoming URL list and converts it to a heap.
+        This method takes the incoming list of URLs and converts it to a heap.
         We use a heap so that we can iterate through the list and return
         any URLs required to wait to the back of the queue.
 
         Any domains that are 'waiting' are kept in a dictionary as a
         key and the time it was last run as its value.
+        we refer back to this to check against the time passed
+        and if we can now call that domain again.
         """
 
         # Define dictionary for tracking "waiting" domains
@@ -66,7 +68,7 @@ class ControllerNode(object):
 
             #############
             # Since writing this I have discovered urlparse.py which does the
-            # following a little more elegantly than I have done it
+            # same thing but a little more elegantly than I have done it
             #############
             domainCriteria = re.compile(r'((https?://)([\da-z\.-]+)\.([a-z\.]{2,6}))')
 
@@ -89,9 +91,10 @@ class ControllerNode(object):
                     rateLimitDict[domain] = time.time()
                 else:
                     # If not enough time has elapsed then add the url back to the heap
+                    # with the current time
                     heapq.heappush(urlHeap, (time.time(), url))
             else:
-                # If domain hasn't been scraped before, ru the scraper and add to
+                # If domain hasn't been scraped before, run the scraper and add to
                 # the dictionary of scraped domains with the current time
                 run_scraper_node(url)
                 rateLimitDict[domain] = time.time()
