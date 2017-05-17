@@ -7,9 +7,7 @@ import heapq
 
 
 class ControllerNode(object):
-
     def __init__(self):
-
         # For the purposes of this test I have set up the example input URLs in a list
         # as I am unfamiliar with the instructions
         # This will then be passed on to the main routine to cycle through.
@@ -56,8 +54,8 @@ class ControllerNode(object):
             # this makes sure the incoming list maintains its original order
             time.sleep(0.00001)
 
-        # Once we send a url of the be scraped it will be removed from the heap. This will loop
-        # while the heap still has items within it
+            # Once we send a url of the be scraped it will be removed from the heap. This will loop
+            # while the heap still has items within it
         while len(urlHeap) > 0:
             # Define criteria of a domain
             # Search url string for specific groups to determine domain name only
@@ -109,6 +107,10 @@ def run_scraper_node(url):
     timeStamp = time.time()
     dateAndTime = datetime.datetime.fromtimestamp(timeStamp).strftime('%Y-%m-%d %H:%M:%S')
     print(dateAndTime, url)
+
+    logFile = open("ScraperURL.txt", "a")
+    logFile.write(dateAndTime + " - " + url + "\n")
+    logFile.close()
 
     return
 
